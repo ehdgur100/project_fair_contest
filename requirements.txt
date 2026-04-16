@@ -1,0 +1,7 @@
+langchain
+sentence-transformers
+faiss-cpu
+rank-bm25
+bert-score
+pdfplumber
+scikit-learn
