@@ -47,9 +47,18 @@ def run_pipeline():
         config.TOP_K,
         config.RRF_K,
     )
+    retrieved_texts = []
+    for chunk in doc_chunks:
+        if chunk["chunk_id"] in retrieved_chunk_ids:
+            retrieved_texts.append(chunk["text"])
 
     # 생성 (Mock)
-    final_answer = generate_answer(test_query, retrieved_chunk_ids)
+    final_answer = generate_answer(test_query, retrieved_texts)
+
+    print("\n[AI에게 전달된 5개의 문서 내용 확인]")
+    for i, text in enumerate(retrieved_texts):
+        print(f"--- 청크 {i+1} ---")
+        print(text[:100] + " ... (중략)")
 
     end_time = time.time()
     elapsed_time = end_time - start_time
