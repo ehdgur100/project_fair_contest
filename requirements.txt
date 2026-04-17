@@ -5,3 +5,5 @@ rank-bm25
 bert-score
 pdfplumber
 scikit-learn
+python-dotenv
+openai
