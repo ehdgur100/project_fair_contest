@@ -8,6 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 RAW_DATA_DIR = os.path.join(DATA_DIR, "raw")  # 주최 측이 준 JSON 파일들을 넣을 폴더
 
+GROUND_TRUTH_PATH = os.path.join(DATA_DIR, "ground_truth.json")
+
 # [RAG 검색 세팅값]
 TOP_K = 5  # 질문을 던졌을 때, AI에게 넘겨줄 '가장 비슷한 문서 조각'의 개수입니다. (대회 규정: 5개)
 RRF_K = (
