@@ -19,18 +19,33 @@ def build_vector_db(doc_chunks: List[Dict], model_name: str):
 
     embed_model = SentenceTransformer(model_name, device="cpu")
 
-    # 🚨 팀장님의 _hybrid.json 실제 구조에 완벽하게 맞춤 (page_content, metadata)
-    texts = [doc["page_content"] for doc in doc_chunks]
-    chunk_ids = [doc["metadata"]["chunk_id"] for doc in doc_chunks]
+    # 🚨 [수정된 부분] KeyError 완벽 방어: 어떤 구조의 JSON이 들어와도 알아서 찾음!
+    texts = []
+    chunk_ids = []
 
-    # 2. FAISS 업그레이드 (Cosine Similarity 적용)
+    for doc in doc_chunks:
+        # 1. 텍스트 추출 (page_content, text, content 중 존재하는 것을 자동으로 가져옴)
+        text = doc.get("page_content") or doc.get("text") or doc.get("content") or ""
+        texts.append(text)
+
+        # 2. ID 추출 (metadata 안의 chunk_id, 혹은 바로 밖의 chunk_id 중 알아서 가져옴)
+        metadata = doc.get("metadata", {})
+        chunk_id = (
+            metadata.get("chunk_id")
+            or doc.get("chunk_id")
+            or doc.get("id")
+            or "unknown"
+        )
+        chunk_ids.append(chunk_id)
+
+    # FAISS 업그레이드 (Cosine Similarity 적용)
     embeddings = embed_model.encode(texts, convert_to_numpy=True)
-    faiss.normalize_L2(embeddings)  # 내적(IP) 전 벡터 길이 정규화 필수
+    faiss.normalize_L2(embeddings)
     dimension = embeddings.shape[1]
-    index = faiss.IndexFlatIP(dimension)  # 코사인 유사도(IP) 엔진 장착
+    index = faiss.IndexFlatIP(dimension)
     index.add(embeddings)
 
-    # 3. BM25 업그레이드 (Kiwi 형태소 분석기 적용)
+    # BM25 업그레이드 (Kiwi 형태소 분석기 적용)
     tokenized_texts = [tokenize_korean(text) for text in texts]
     bm25 = BM25Okapi(tokenized_texts)
 

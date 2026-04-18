@@ -1,9 +1,20 @@
+# 1. RAG 프레임워크 및 LLM
 langchain
+openai
+python-dotenv
+
+# 2. 임베딩 및 벡터 검색 (Dense Retrieval)
 sentence-transformers
 faiss-cpu
+numpy
+
+# 3. 키워드 검색 및 형태소 분석 (Sparse Retrieval)
 rank-bm25
-bert-score
+kiwipiepy
+
+# 4. 데이터 전처리 및 분석
 pdfplumber
 scikit-learn
-python-dotenv
-openai
+
+# 5. 성능 평가
+bert-score
